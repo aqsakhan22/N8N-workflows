@@ -1,0 +1,98 @@
+{
+  "name": "AI Study Notes Summarizer.",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -208,
+        0
+      ],
+      "id": "8d30e616-9e84-4084-8a27-a776506b837b",
+      "name": "When chat message received",
+      "webhookId": "d21f6353-2382-40a1-8593-87419c7ce429"
+    },
+    {
+      "parameters": {
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a beginner-friendly study assistant. Summarize the student's notes into:\n1. One simple definition\n2.Three key bullet points\n3. One simple real-life example\n4. One memory sentence Use simple English.\nDo not add unnecessary information. \nStuden Notes \n{{ $json.chatInput }}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        16,
+        0
+      ],
+      "id": "2636f055-a91c-4277-b934-bed2790129e2",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        144
+      ],
+      "id": "b7ae4f34-bfda-4fa8-9f5e-46e7c727a5c2",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d93f81a8-8dc2-4d6a-ab2f-40d1d4f986e5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "865e5ec4985cd70401f5bd4c37f8cd87997f1f58c6a7ef9e8646c56da3e22243"
+  },
+  "nodeGroups": [],
+  "id": "p96isLo10pZWTexq",
+  "tags": []
+}
