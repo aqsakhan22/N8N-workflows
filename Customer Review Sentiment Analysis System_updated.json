@@ -1,0 +1,381 @@
+{
+  "name": "Customer Review Sentiment Analysis System",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -368,
+        -64
+      ],
+      "id": "76741284-fb67-45ce-8a4b-934d0be54f5b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1YIFIzK4ZoTFgKzgxqVfAFXeP-7kosaDfoVq3wws59xc",
+          "mode": "list",
+          "cachedResultName": "customer_reviews_analyzer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YIFIzK4ZoTFgKzgxqVfAFXeP-7kosaDfoVq3wws59xc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YIFIzK4ZoTFgKzgxqVfAFXeP-7kosaDfoVq3wws59xc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -144,
+        -48
+      ],
+      "id": "4426c43f-ca3c-4616-b9b5-d0a6759b62d9",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "l4tJoVrEdSicKTRO",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "b8931ad0-b8e2-4159-a337-e44db6ee1582",
+              "leftValue": "={{ $json.Processed }}",
+              "rightValue": "No",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.4,
+      "position": [
+        80,
+        -48
+      ],
+      "id": "3e3772b5-d7e6-4db2-9a63-358a7308b0ee",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -48
+      ],
+      "id": "e5512d1e-9757-4454-8e7b-267556b49ee6",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1YIFIzK4ZoTFgKzgxqVfAFXeP-7kosaDfoVq3wws59xc",
+          "mode": "list",
+          "cachedResultName": "customer_reviews_analyzer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YIFIzK4ZoTFgKzgxqVfAFXeP-7kosaDfoVq3wws59xc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YIFIzK4ZoTFgKzgxqVfAFXeP-7kosaDfoVq3wws59xc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sentiment": "={{ $json.Sentiment }}",
+            "Review_ID": "={{ $('Get row(s) in sheet').item.json.Review_ID }}",
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}",
+            "Processed": "Yes"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Review_ID",
+              "displayName": "Review_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer_Name",
+              "displayName": "Customer_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Review",
+              "displayName": "Review",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Sentiment",
+              "displayName": "Sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Processed",
+              "displayName": "Processed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        752,
+        112
+      ],
+      "id": "e04526f4-dc4a-49a8-a000-ebf7f5519ae2",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "l4tJoVrEdSicKTRO",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        -320
+      ],
+      "id": "92e3736f-d5a8-4329-b5cc-b989274860dd",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\nYou are a customer review sentiment classifier.\n\nClassify the following customer review into exactly one category:\nPositive, Negative, or Neutral.\n\nRules:\n- Positive: overall favorable feedback.\n- Negative: overall unfavorable feedback.\n- Neutral: factual, neither positive nor negative, or mixed feedback without a clear overall sentiment.\n\nReturn only the category name. Do not include explanations.\n\nCustomer review:\n{{ $json.Review }}\n",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "="
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        192,
+        112
+      ],
+      "id": "0a5bb380-ad39-48af-a317-7c925f7d4d92",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        176,
+        256
+      ],
+      "id": "f39063c1-7641-4fa6-ab64-15b0c78ea04d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "pythonNative",
+        "pythonCode": "\n# Get the incoming item\ndata = _item[\"json\"]\n\n# Get Gemini's response\nraw_sentiment = data.get(\"text\", \"\").strip().lower()\n\n# Allowed sentiments\nsentiments = {\n    \"positive\": \"Positive\",\n    \"negative\": \"Negative\",\n    \"neutral\": \"Neutral\"\n}\n\n# Validate the sentiment\nsentiment = sentiments.get(raw_sentiment)\n\nif sentiment is None:\n    raise ValueError(\"Invalid sentiment: \" + raw_sentiment)\n\n# Return the result\nreturn {\n    \"json\": {\n        **data,\n        \"Sentiment\": sentiment,\n        \"Processed\": \"Yes\"\n    }\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        112
+      ],
+      "id": "18467b26-9563-4588-b0a3-b0983693e543",
+      "name": "Code in Python"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        []
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code in Python",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "4a36cca9-0081-4117-93b6-623f4d873e1c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "865e5ec4985cd70401f5bd4c37f8cd87997f1f58c6a7ef9e8646c56da3e22243"
+  },
+  "nodeGroups": [],
+  "id": "H9b7cXhgRF1whM5e",
+  "tags": []
+}
